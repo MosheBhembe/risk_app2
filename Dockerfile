@@ -4,7 +4,7 @@ WORKDIR /riskapp
 
 RUN npm install -g expo-cli
 
-COPY packges*.json ./riskapp
+COPY package*.json ./
 
 RUN npm install
 
