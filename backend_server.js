@@ -143,7 +143,7 @@ app.post('/user-data', async (Request, Response) => {
         console.error(error)
         return Response.status(500).send({ status: 'error', data: 'internal Server error' });
     }
-})
+});
 
 // Forgot password API
 app.post('/forgot-password', async (Request, Response) => {
@@ -160,8 +160,8 @@ app.post('/forgot-password', async (Request, Response) => {
 
         // Email format
         const emailLink = {
-            from: email,
-            to: companyEmail,
+            from: companyEmail,
+            to: email,
             subject: 'Reset Password',
             text: `You requested to reset your password. Please click the link that follows to change your RiskBT account password.\n ${linkReset}`
         }
@@ -315,8 +315,8 @@ app.post('/fuel-consumption', upload.single('image'), async (Request, Response) 
         attachments: [
             {
                 filename: 'image.jpg',
-                path: './uploads/image', // Path to your image file
-                cid: 'unique@nodemailer.com' // Ensure the content ID is unique
+                path: './uploads/image', 
+                cid: 'unique@nodemailer.com' 
             }
         ]
 
