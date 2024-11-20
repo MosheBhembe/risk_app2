@@ -24,7 +24,7 @@ const PORT = 5001;
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 app.use(cors({
-    origin: '*',
+    origin: ['https://dc20-41-13-116-77.ngrok-free.app',],
     methods: 'POST, GET, PUT, PATCH, POST, DELETE',
     credentials: true,
     optionsSuccessStatus: 204
@@ -315,8 +315,8 @@ app.post('/fuel-consumption', upload.single('image'), async (Request, Response) 
         attachments: [
             {
                 filename: 'image.jpg',
-                path: './uploads/image', 
-                cid: 'unique@nodemailer.com' 
+                path: './uploads/image',
+                cid: 'unique@nodemailer.com'
             }
         ]
 
