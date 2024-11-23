@@ -24,11 +24,13 @@ const PORT = 5001;
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 app.use(cors({
-    origin: ['https://dc20-41-13-116-77.ngrok-free.app',],
+    origin: ['https://dc20-41-13-116-77.ngrok-free.app', '*'],
     methods: 'POST, GET, PUT, PATCH, POST, DELETE',
     credentials: true,
     optionsSuccessStatus: 204
 }));
+
+const serverlessExpress = require('aws-serverless-express');
 // const mgService = mailgun(
 //     {
 //         api_key: 'pubkey-49ea76b43d94e5a6c6618eb4a9b1399e',
@@ -68,9 +70,12 @@ mongoose.connect(databaseLink).then(() => {
 
 
 // connection to port 
-app.listen(PORT, () => {
-    console.log(`Server now listening on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Server now listening on port ${PORT}`);
+// });
+
+const server = serverlessExpress.createServer(app);
+exports.handler = (event, context) => serverlessExpress.proxy(server, event, context);
 
 
 // User Registration Code
