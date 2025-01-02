@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Deploy Express API using AWS SAM
+
+Resources: 
+  ExpressFunction: 
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.handler
+      Runtime: nodejs20.x
+      CodeUri: ./Backend
+      MemorySize: 128
+      Timeout: 160
+      Environment: 
+        Variables:
+          DATABASE_URL: 'mongodb+srv://moshebhembe96:riskadatabaseadmin@riskappdatabase.h1nlg5o.mongodb.net/?retryWrites=true&w=majority&appName=RiskappDatabase'
+          JWT_SECRET: 'WE2N32hjkdllsaiendlsjs!@${}{[]shwomcJDNIOAOPWMNKSKFY2737UFLA8sswn2'
+      Events: 
+        ApiGateway: 
+          Type: Api
+          Properties: 
+            Path: /api
+            Method: ANY
+        ApiGatewayProxy: 
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY

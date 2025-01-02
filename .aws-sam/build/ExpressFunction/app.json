@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "fd5313f8-b38a-4cb5-bee3-243f5dfc24bc"
+      }
+    },
+    "android": {
+      "package": "com.mosesbhembe.riskbt_app"
+    }
+  }
+}
