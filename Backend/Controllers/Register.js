@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'); 
 require('../Schemas/registrationData');
-const bcrypt = require('bcrypt');  
+const bcrypt = require('bcryptjs');  
 
 const Register = mongoose.model('Registration Data'); 
 

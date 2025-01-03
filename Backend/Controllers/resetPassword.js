@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken'); 
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 require('../Schemas/registrationData'); 
 
 const Register = mongoose.model('Registration Data'); 
@@ -34,3 +34,5 @@ const resetPassword = async (Request, Response) =>{
         return Response.status(500).send({ status: 'error', data: 'Internal Server Error' });
     }
 }
+
+module.exports = resetPassword;
