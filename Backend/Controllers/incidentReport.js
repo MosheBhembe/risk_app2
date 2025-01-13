@@ -1,11 +1,11 @@
-const mongoose = require('mongoose'); 
-const emailConfigurations = require('../Middleware/nodemailerconfig.js'); 
+const mongoose = require('mongoose');
+const transporter = require('../Middleware/nodemailerconfig.js');
 
 
-require('../Schemas/ReportData.js'); 
+require('../Schemas/ReportData.js');
 require('../Schemas/emails.js');
-const Report = mongoose.model('ReportData'); 
-const Email = mongoose.model('emails'); 
+const Report = mongoose.model('ReportData');
+const Email = mongoose.model('emails');
 
 const incidentReport = async (Request, Response) => {
     const { name, email, location, assets, dateTime } = Request.body;
@@ -18,7 +18,7 @@ const incidentReport = async (Request, Response) => {
         text: emailInfo,
     }
 
-    emailConfigurations.sendMail(sendInfo, setTimeout('120s'),async (error, info) => {
+    transporter.sendMail(sendInfo, setTimeout('120s'), async (error, info) => {
         if (error) {
             Response.status({ status: "error", message: 'Your email could not be sent' })
         }

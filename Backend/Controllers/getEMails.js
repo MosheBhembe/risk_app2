@@ -1,15 +1,15 @@
-const mongoose = require('mongoose'); 
-require('../Schemas/emails'); 
+const mongoose = require('mongoose');
+require('../Schemas/emails');
 
-const Emails = mongoose.model('emails'); 
+const Email = mongoose.model('emails');
 
-const getAllEmails = async (Response) => {
+const getAllEmails = async (Request, Response) => {
     try {
-        const emails = await Emails.find(); 
-        Response.status(200).json({status: 'ok', data: emails}); 
+        const emails = await Email.find();
+        Response.status(200).json({ status: 'ok', data: emails });
     } catch (error) {
         console.log('Error fetching emails: ', error);
-        res.status(500).json({ status: 'error', message: `Failed to fetch emails` });
+        return Response.json({ message: `Failed to fetch emails` });
     }
 }
 
