@@ -8,12 +8,7 @@ const router = require('./Middleware/Router');
 
 // configurations
 const app = express();
-app.use(cors({
-    origin: '*',
-    methods: 'POST, GET, PUT, PATCH, POST, DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204,
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use('/api', router);
