@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const registrationDataSchema = mongoose.Schema({
-    Names: String,
+    Name: String,
     Surname: String,
     Email: {
         type: String,

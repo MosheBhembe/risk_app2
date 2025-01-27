@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-require('../Schemas/registrationData'); 
+require('../Schemas/registrationData');
 
-const Register = mongoose.model('Registration Data'); 
+const Register = mongoose.model('Registration Data');
 
-const resetPassword = async (Request, Response) =>{
+const resetPassword = async (Request, Response) => {
     const { token, newPassword, confirmNewPassowrd } = Request.body;
     try {
         const decodedJWT = jwt.verify(token, process.env.JWT_TOKEN);
@@ -29,7 +29,7 @@ const resetPassword = async (Request, Response) =>{
         nRegUser.Password = hashedPassword;
         await nRegUser.save();
         return Response.status(200).send({ status: 'ok', data: 'password updated' });
-    
+
     } catch (error) {
         return Response.status(500).send({ status: 'error', data: 'Internal Server Error' });
     }

@@ -1,44 +1,49 @@
 const mongoose = require('mongoose');
-require('../Schemas/registrationData');
 const bcrypt = require('bcryptjs');
 
+require('../Schemas/registrationData');
 const Register = mongoose.model('Registration Data');
 
-const registerUser = async (Request, Response) => {
-    const { name, surname, email, password, confirmPassword } = Request.body;
-    const encrpytedPassword = await bcrypt.hash(password, 10);
-    const encrpytedPasswordConfirmation = await bcrypt.hash(confirmPassword, 10);
-    const RegisteredUser = await Register.findOne({ Email: email });
-
-    if (RegisteredUser) {
-        Response.send({ data: 'This email is already registered' });
-    }
-
+const registerUser = async (req, res) => {
     try {
+
+        const { Name, Surname, Email, Password, ConfirmPassword } = req.body;
+        const RegisteredUser = await Register.findOne({ Email: Email });
+        const hashedPassword = await bcrypt.hash(Password, 10);
+        const encryptedConfirmPassword = await bcrypt.hash(ConfirmPassword, 10);
+
+        if (RegisteredUser) {
+            Response.send({ message: "USER ALREADY EXISTS" });
+        }
+
         await Register.create({
-            Names: name,
-            Surname: surname,
-            Email: email,
-            PAssword: encrpytedPassword,
-            confirmPassword: encrpytedPasswordConfirmation
+            Name: Name,
+            Surname: Surname,
+            Email: Email,
+            Password: hashedPassword,
+            ConfirmPassword: encryptedConfirmPassword
         })
-        Response.send({ status: 'ok', data: 'User Created' });
+        res.send({ status: "ok", data: 'User Created ' });
+
     } catch (error) {
-        Response.send({ status: 'Error', data: error });
+        console.log("data: ", req.body);
+        console.log("headers: ", req.headers);
+        console.log(error);
+        res.status(500).send({ status: 'Error', data: error.message });
     }
-}
+};
 
 const delete_user = async (Request, Response) => {
     const { email } = Request.body;
-    const user = await Register.findOneAndDelete({ Email: email });
     try {
+        const user = await Register.findOneAndDelete({ Email: email });
         if (!user) {
-            Response.status(404).json({ message: "There is no user with that email" });
+            return Response.status(404).json({ message: "There is no user with that email" });
         }
-        Response.status(200).json({ status: "Success", message: "User deleted" });
+        return Response.status(200).json({ status: "success", message: "User deleted" });
     } catch (error) {
-        return Response.status(500).json({ status: "error", message: error.message })
+        return Response.status(500).json({ status: "error", message: error.message });
     }
-}
+};
 
 module.exports = { registerUser, delete_user };

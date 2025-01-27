@@ -14,7 +14,7 @@ const incidentReport = require('../Controllers/incidentReport.js');
 
 const router = express.Router();
 
-router.post('/test', upload.single('file'), test);
+// router.post('/test', upload.single('file'), test);
 router.post('/login-user', login);
 router.post('/user-data', user_Data);
 router.post('/register-user', registerUser);
