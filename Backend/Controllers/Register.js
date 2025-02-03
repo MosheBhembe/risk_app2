@@ -23,12 +23,9 @@ const registerUser = async (req, res) => {
             Password: hashedPassword,
             ConfirmPassword: encryptedConfirmPassword
         })
-        res.send({ status: "ok", data: 'User Created ' });
+        res.status(200).send({ status: "ok", data: 'User Created ' });
 
     } catch (error) {
-        console.log("data: ", req.body);
-        console.log("headers: ", req.headers);
-        console.log(error);
         res.status(500).send({ status: 'Error', data: error.message });
     }
 };

@@ -16,6 +16,7 @@ const fuel_data = async (Request, Response) => {
     const image = Request.file
 
     const user_email = await Register.findOne().select('Email');
+    const userId = Request.user.Id;
 
     if (!image) {
         return Response.status(400).json({ message: 'No Image uploaded' });
@@ -64,7 +65,8 @@ const fuel_data = async (Request, Response) => {
             Amount: amount,
             Cost: cost,
             Image: image,
-            DateTime: date
+            DateTime: date,
+            createdBy: userId
         });
 
     } catch (error) {

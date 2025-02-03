@@ -13,7 +13,7 @@ const login = async (Request, Response) => {
         const existingUser = await Register.findOne({ Email: email });
 
         if (!existingUser) {
-            return Response.status(401).send({
+            return Response.status(404).send({
                 error: 'USER DOES NOT EXIST'
             });
         }
@@ -26,7 +26,7 @@ const login = async (Request, Response) => {
         }
 
         const token = jwt.sign({ email: existingUser.Email }, process.env.JWT_TOKEN);
-        return Response.status(201).send({ status: 'ok', data: token });
+        return Response.status(200).send({ status: 'ok', data: token });
 
     } catch (error) {
         console.log(error);

@@ -8,6 +8,7 @@ const registrationDataSchema = mongoose.Schema({
         required: true,
         unique: true
     },
+    Role: { type: String, required: true },
     Password: String,
     ConfirmPassword: String
 }, {

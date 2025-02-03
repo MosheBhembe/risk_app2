@@ -5,6 +5,7 @@ const emailSchema = new mongoose.Schema({
     from: String,
     subject: String,
     text: String,
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     sentAt: {
         type: Date,
         default: Date.now

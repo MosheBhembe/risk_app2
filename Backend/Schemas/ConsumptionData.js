@@ -6,7 +6,8 @@ const ConsumptionDataSchema = mongoose.Schema({
     Amount: String,
     Cost: String,
     Image: String,
-    DateTime: { type: Date, required: true }
+    DateTime: { type: Date, required: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {
     collection: "consumptionData"
 });
