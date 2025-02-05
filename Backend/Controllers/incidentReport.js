@@ -29,9 +29,9 @@ const incidentReport = async (Request, Response) => {
 
     transporter.sendMail(sendInfo, async (error, info) => {
         if (error) {
-            Response.status({ status: "error", message: 'Your email could not be sent' })
+            Response.status(502).json({ status: "error", message: 'Your email could not be sent' })
         }
-        Response.status({ status: 'ok', message: 'Email has been sent to management' });
+        Response.status(200).json({ status: 'ok', message: 'Email has been sent to management' });
 
         try {
             const email = new Email(sendInfo);

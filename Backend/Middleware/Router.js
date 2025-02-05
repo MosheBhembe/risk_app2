@@ -9,11 +9,8 @@ const upload = require('../Middleware/multer_config.js');
 const fuel_data = require('../Controllers/fuelData.js');
 const resetPassword = require('../Controllers/resetPassword.js');
 const incidentReport = require('../Controllers/incidentReport.js');
-const ManagerRegistration = require('../Controllers/RolesRegistration and login/ManagerRegistration.js');
-const loginAsManager = require('../Controllers/RolesRegistration and login/managerLogin.js');
 const { CreateAsset, DeleteAsset, GetAllAssets, UpdateAsset } = require('../Controllers/AssetsController.js');
-const AdminRegistration = require('../Controllers/RolesRegistration and login/AdminRegistration.js');
-const loginAsAdmin = require('../Controllers/RolesRegistration and login/adminLogin.js');
+
 const {
     createPlannedMaintenance,
     getAllMaintenanceReports,
@@ -31,11 +28,7 @@ const validateRole = require('./Roles.js');
 
 const router = express.Router();
 
-// admin and manager endpoints
-router.post('/register-admin', AdminRegistration);
-router.post('/admin-login', loginAsAdmin);
-router.post('/register-manager', ManagerRegistration);
-router.post('/manager-login', loginAsManager);
+
 router.post('/log-new-asset', authenticateToken, validateRole(["create_asset"]), upload.single('image'), CreateAsset);
 router.post('/delete-asset', authenticateToken, validateRole(["delete_asset"]), DeleteAsset);
 router.post('/update-asset', authenticateToken, validateRole(["update_asset"]), UpdateAsset);

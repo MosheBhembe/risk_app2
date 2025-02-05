@@ -12,7 +12,7 @@ require('../Schemas/emails');
 const Email = mongoose.model('emails');
 
 const fuel_data = async (Request, Response) => {
-    const { name, regNumber, amount, cost, date } = Request.body;
+    const { regNumber } = Request.body;
     const image = Request.file
 
     const user_email = await Register.findOne().select('Email');
@@ -29,8 +29,8 @@ const fuel_data = async (Request, Response) => {
     const emailReportData = {
         from: user_email.Email,
         to: "vsmlb96@gmail.com",
-        subject: `Fuel Consumption report from ${name}: Registration #: ${regNumber}`,
-        text: `Name: ${name}, Registration: ${regNumber}, Amount: ${amount}, Cost: ${cost}, Date: ${date}, Image Path: ${image}`,
+        subject: `Fuel Consumption report: Registration #: ${regNumber}`,
+        text: `Registration: ${regNumber}, Image Path: ${image}`,
         attachments: [
             {
                 filename: path.basename(image),
@@ -60,12 +60,8 @@ const fuel_data = async (Request, Response) => {
         });
 
         await FuelData.create({
-            Name: name,
             Registration: regNumber,
-            Amount: amount,
-            Cost: cost,
             Image: image,
-            DateTime: date,
             createdBy: userId
         });
 

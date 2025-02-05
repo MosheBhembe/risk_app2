@@ -4,6 +4,7 @@ const reportDataSchema = mongoose.Schema({
     name: String,
     email: { type: String },
     location: String,
+    selectedOptions: [String], 
     assets: String,
     dateTime: { type: Date, reqiured: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
