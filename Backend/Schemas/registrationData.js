@@ -1,16 +1,18 @@
 const mongoose = require('mongoose');
 
 const registrationDataSchema = mongoose.Schema({
-    // companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
     Name: String,
     Surname: String,
+    IDNumber: { type: String, required: true },
+    Role: { type: String, required: true },
+    Company: { type: String, required: true },
+    CellPhone: { type: String, required: true },
     Email: {
         type: String,
         required: true,
         unique: true
     },
-    Role: { type: String, required: true },
-    Company: { type: String, required: true },
+    Gender: { type: String, required: true },
     Password: String,
 }, {
     collection: "Registration Data",

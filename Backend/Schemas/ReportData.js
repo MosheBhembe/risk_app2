@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const reportDataSchema = mongoose.Schema({
-    name: String,
-    email: { type: String },
-    location: String,
-    selectedOptions: [String], 
-    assets: String,
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    location: { type: String, required: true },
+    selectedOptions: { type: [String], required: true },
+    assets: { type: String, required: true },
     dateTime: { type: Date, reqiured: true },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {
     collection: 'ReportData'
 });

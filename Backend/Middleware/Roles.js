@@ -9,27 +9,46 @@ const roleAccess = {
         "get_all_assets",
         "get_emails",
 
-        // Divers Log
-        // "create_drivers",
-        // "delete_drivers",
-        // "update_drivers",
-        // "get_drivers",
-
         // Maintainence Log
         "create_maintainence_log",
         "update_maintainence_log",
         "delete_maintainence_log",
-        "get_maintainence_log"
+        "get_maintainence_log",
+
+        // Get incident reports
+        "get_incident_report",
+        "update_incident_report",
+
+        // SHE DOCUMENT
+        "create_SHE_document",
+        "update_SHE_document",
+        "delete_SHE_document",
+        "get_SHE_document",
+
+        // SHE Policy
+        "create_SHE_policy",
+        "get_SHE_policy",
+
+        // Admin Fuel Report 
+        "create_Admin_Fuel_Report",
+        "update_Admin_Fuel_Report",
+        "delete_Admin_Fuel_Report",
+        "get_Admin_Fuel_Report",
+        "create_license-training_form",
+        "get_license_training_form "
 
     ],
     Manager: [
         "get_all_assets",
         "get_maintainence_log",
         "get_emailes",
+        "get_SHE_policy",
+        "get_SHE_document",
+        "get-license_training_form"
 
     ],
     Employee: [
-        "create_report",
+        "create_incident_report",
         "create_fuel_consumption",
         "get_emails"
     ]
@@ -37,11 +56,12 @@ const roleAccess = {
 
 const validateRole = (requiredPermission) => {
     return (Request, Response, next) => {
-        const { role } = Request.user;
 
-        if (!role) {
+        if (!Request.user || Request.user.Role) {
             return Response.status(401).json({ message: 'Unautherized Access: Role not found' });
         }
+
+        const { role } = Request.user;
 
         const permissions = roleAccess[role];
 

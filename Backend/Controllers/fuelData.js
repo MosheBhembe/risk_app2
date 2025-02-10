@@ -3,7 +3,7 @@ const transporter = require('../Middleware/nodemailerconfig');
 const companyEmail = require('../Middleware/companyEmail');
 
 require('../Schemas/ConsumptionData');
-const FuelData = mongoose.model('consumptionData');
+const consumptionData = mongoose.model('consumptionData');
 
 require('../Schemas/registrationData');
 const Register = mongoose.model('Registration Data');
@@ -13,7 +13,7 @@ const Email = mongoose.model('emails');
 
 const fuel_data = async (Request, Response) => {
     const { regNumber } = Request.body;
-    const image = Request.file
+    const image = Request.file ? Request.file.path : null;
 
     const user_email = await Register.findOne().select('Email');
     const userId = Request.user.Id;
@@ -22,10 +22,18 @@ const fuel_data = async (Request, Response) => {
         return Response.status(400).json({ message: 'No Image uploaded' });
     }
 
-    if (image) {
-        return Response.status(200).json(Request.file);
-    }
-    // Create the email body structure
+    const newFuelData = consumptionData({
+        createdBy: userId,
+        Registration: regNumber,
+        Image: image
+
+    })
+    await newFuelData.save();
+    Response.status(200).json({
+        message: 'Data sent'
+    })
+
+    // Create the email body sructure
     const emailReportData = {
         from: user_email.Email,
         to: "vsmlb96@gmail.com",
@@ -47,7 +55,7 @@ const fuel_data = async (Request, Response) => {
                 return res.status(500).send({ status: 'error', message: 'Email was not sent' });
             }
             console.log('Email sent', info.response);
-            res.send({ status: 'ok', message: 'Fuel data stored and email sent' });
+            Response.send({ status: 'ok', message: 'Fuel data stored and email sent' });
 
             // Save the email data (optional)
             try {
@@ -58,13 +66,6 @@ const fuel_data = async (Request, Response) => {
                 console.log('Error saving email data:', saveError);
             }
         });
-
-        await FuelData.create({
-            Registration: regNumber,
-            Image: image,
-            createdBy: userId
-        });
-
     } catch (error) {
         console.log('Error saving fuel data:', error);
         res.status(500).send({ status: 'error', data: error.message });

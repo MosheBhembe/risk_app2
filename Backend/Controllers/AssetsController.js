@@ -6,8 +6,8 @@ const Assets = mongoose.model('Assets');
 // Create Assets
 const CreateAsset = async (Request, Response) => {
     try {
-        const { AssetName, AssetType, AssetRegistration } = Request.body
-        const image = Request.file ? Request.file.path : null;
+        const { AssetName, AssetType, AssetRegistration, assetModel, year, capacity } = Request.body
+        const document = Request.file ? Request.file.path : null;
         const userId = Request.user.Id;
 
         const ExistingAsset = await Assets.findOne({ AssetReg: AssetRegistration });
@@ -19,7 +19,10 @@ const CreateAsset = async (Request, Response) => {
             AssetName,
             AssetType,
             AssetReg: AssetRegistration,
-            Image: image
+            AssetModel: assetModel,
+            Year: year,
+            Capacity: capacity,
+            Image: document
         });
 
         await newAsset.save();
@@ -36,7 +39,7 @@ const GetAllAssets = async (Request, Response) => {
     try {
         const assets = await Assets.find();
 
-        if (assets.length === 0) return Response.status(400).json({ message: 'No Assets Found' });
+        if (!assets) return Response.status(400).json({ message: 'No Assets Found' });
         return Response.status(200).json({ assets: assets });
 
     } catch (error) {

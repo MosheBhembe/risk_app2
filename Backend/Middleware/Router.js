@@ -8,9 +8,12 @@ const forgotPassword = require('../Controllers/forgot_password.js');
 const upload = require('../Middleware/multer_config.js');
 const fuel_data = require('../Controllers/fuelData.js');
 const resetPassword = require('../Controllers/resetPassword.js');
-const incidentReport = require('../Controllers/incidentReport.js');
+const { incidentReport, getIncidentReport } = require('../Controllers/incidentReport.js');
 const { CreateAsset, DeleteAsset, GetAllAssets, UpdateAsset } = require('../Controllers/AssetsController.js');
-
+const { create_SHE_policy, get_SHE_Policy } = require('../Controllers/SHEPolicy.js');
+const { createsheDocument, getSHEDocument } = require('../Controllers/SHEdoc.js');
+const { createFuelReport, update_fuel_log, getfuelReport, delete_fuel_log } = require('../Controllers/AdminFuelController.js');
+const { create_license_training, get_license_training } = require('../Controllers/TrainingController.js');
 const {
     createPlannedMaintenance,
     getAllMaintenanceReports,
@@ -28,11 +31,14 @@ const validateRole = require('./Roles.js');
 
 const router = express.Router();
 
-
-router.post('/log-new-asset', authenticateToken, validateRole(["create_asset"]), upload.single('image'), CreateAsset);
+router.post('/log-new-asset', authenticateToken, validateRole(["create_asset"]), upload.single('document'), CreateAsset);
 router.post('/delete-asset', authenticateToken, validateRole(["delete_asset"]), DeleteAsset);
 router.post('/update-asset', authenticateToken, validateRole(["update_asset"]), UpdateAsset);
-
+router.post('/log-SHE-document', authenticateToken, validateRole(["create_SHE_document"]), upload.single('document'), createsheDocument);
+router.get('/get-SHE-Document', authenticateToken, validateRole(["get_SHE_document"]), getSHEDocument);
+router.post('/get-SHE-policy', authenticateToken, validateRole(["get_SHE_policy"]), get_SHE_Policy);
+router.post('/log-she-policy', authenticateToken, validateRole(["create-SHE-policy"]), upload.single('PolicyDoc'), create_SHE_policy);
+router.post('/')
 // router.post('/test', upload.single('file'), test);
 router.post('/login-user', login);
 router.post('/user-data', user_Data);
@@ -41,22 +47,29 @@ router.post('/delete-user', delete_user);
 router.post('/forgot-password', forgotPassword);
 router.post('/fuel-data', upload.single('image'), authenticateToken, validateRole(["create_report", "create_fuel_consumption", "get_emails"]), fuel_data);
 router.post('/reset-password', resetPassword);
-router.post('/report-incident', authenticateToken, validateRole([""]), incidentReport);
+router.post('/report-incident', authenticateToken, validateRole(["create_incident_report", "create_fuel_consumption", "get_emails"]), incidentReport);
+router.get('/fetch-incident-report', authenticateToken, validateRole(["get_incident_reports"]), getIncidentReport);
+router.post('/create-admin-fuel-report', authenticateToken, validateRole(["create_Admin_Fuel_Report"]), upload.single('attachment'), createFuelReport);
+router.put('/update-admin-fuel', authenticateToken, validateRole(["update_Admin_Fuel_Report"]), update_fuel_log);
+router.delete('/delete-admin-fuel', authenticateToken, validateRole(["delete_Admin_Fuel_Report"]), delete_fuel_log);
+router.get('/get-admin-fuel-report', authenticateToken, validateRole(["get_Admin_Fuel_Report"]), getfuelReport);
 
 //Planned Maintenance Report
-router.post('/create-planned-maintenance-report', authenticateToken, validateRole(["create_maintainence_log"]), createPlannedMaintenance);
+router.post('/create-planned-maintenance-report', authenticateToken, validateRole(["create_maintainence_log"]), upload.single('attachment'), createPlannedMaintenance);
 router.get('/get-all-planned-maintenance-reports', authenticateToken, validateRole(["get_maintainence_log"]), getAllMaintenanceReports);
-router.post('/delete-planned-maintenance-report', authenticateToken, validateRole(["delete_maintainence_log"]), DeleteMaintenanceReport);
-router.post('/update-planned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log "]), updatePlannedMaintenance);
+router.delete('/delete-planned-maintenance-report', authenticateToken, validateRole(["delete_maintainence_log"]), DeleteMaintenanceReport);
+router.put('/update-planned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log "]), updatePlannedMaintenance);
 
 // Unplaned Maintenace Report
-router.post('/create-unplanned-maintenance-report', authenticateToken, validateRole(["create_maintainence_log"]), createUnplannedMaintenance);
+router.post('/create-unplanned-maintenance-report', authenticateToken, validateRole(["create_maintainence_log"]), upload.single('attachment'), createUnplannedMaintenance);
 router.get('/get-all-unplanned-maintenance-report', authenticateToken, validateRole(["get_maintainence_log"]), getAllUnplannedMaintenanceReports);
-router.post('/delete-unplanned-maitenance-report', authenticateToken, validateRole(["delete_maintainence_log"]), DeleteUnplannedMaintenanceReport);
-router.post('/update-unplanned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log"]), updateUnplannedMaintenance),
+router.delete('/delete-unplanned-maitenance-report', authenticateToken, validateRole(["delete_maintainence_log"]), DeleteUnplannedMaintenanceReport);
+router.put('/update-unplanned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log"]), updateUnplannedMaintenance);
+router.post('/log-license-training', authenticateToken, validateRole(["create_license-training_form"]), upload.single('document'), create_license_training);
+router.get('get-license-training', authenticateToken, validateRole(["get-license_training_form"]), get_license_training);
 
-    // Get endpoints 
-    router.get('/emails', authenticateToken, getAllEmails);
+// Get endpoints 
+router.get('/emails', authenticateToken, getAllEmails);
 router.get('/fetch-all-assets', authenticateToken, validateRole(["get_all_assets"]), GetAllAssets);
 
 module.exports = router; 

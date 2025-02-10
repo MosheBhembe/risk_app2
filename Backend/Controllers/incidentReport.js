@@ -13,9 +13,9 @@ const Register = mongoose.model('Registration Data');
 
 
 const incidentReport = async (Request, Response) => {
-    const { name, email, location, assets, dateTime } = Request.body;
+    const { name, email, location, selected, assets, dateTime } = Request.body;
 
-    const userId = Request.user.userId;
+    const userId = Request.user.Id;
 
     const userEmail = Register.findOne({ createdBy: userId }).select('Email')
 
@@ -44,12 +44,13 @@ const incidentReport = async (Request, Response) => {
 
     try {
         await Report.create({
+            createdBy: userId,
             name: name,
             email: email,
             location: location,
+            selectedOptions: selected,
             assets: assets,
-            dateTime: dateTime,
-            createdBy: userId
+            dateTime: dateTime
         });
         Response.send({ status: 'ok', data: "Report Data Created" });
     } catch (error) {
@@ -57,4 +58,27 @@ const incidentReport = async (Request, Response) => {
     }
 }
 
-module.exports = incidentReport; 
+// get Incident report
+
+const getIncidentReport = async (Request, Response) => {
+    try {
+
+        const userId = Request.user.Id;
+        const incidentReport = await Report.find({ createdby: userId });
+
+        if (!incidentReport) {
+            Response.status(404).json({ status: "error", message: 'No Incident Report Found' });
+        }
+
+        Response.status(200).json({ status: 'ok', data: incidentReport });
+
+    } catch (error) {
+        console.log(error)
+        return Response.status(500).json({
+            message: "Internal Server Error",
+            error: error
+        })
+    }
+}
+
+module.exports = { incidentReport, getIncidentReport };  

@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 
 const ConsumptionDataSchema = mongoose.Schema({
-    Name: String,
-    Registration: String,
-    Amount: String,
-    Cost: String,
-    Image: String,
-    DateTime: { type: Date, required: true },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    Registration: { type: String, required: true },
+    Image: { type: String, required: true }
 }, {
-    collection: "consumptionData"
+    collection: "consumptionData",
+    timestamp: true
 });
 
 mongoose.model('consumptionData', ConsumptionDataSchema); 

@@ -25,7 +25,7 @@ const login = async (Request, Response) => {
             })
         }
 
-        const token = jwt.sign({ email: existingUser.Email }, process.env.JWT_TOKEN);
+        const token = jwt.sign({ email: existingUser.Email, role: existingUser.Role, company: existingUser.Company }, process.env.JWT_TOKEN);
         return Response.status(200).send({ status: 'ok', data: token });
 
     } catch (error) {
