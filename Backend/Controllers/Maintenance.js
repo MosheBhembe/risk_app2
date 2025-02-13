@@ -1,13 +1,18 @@
 // Maintenance.js
 const mongoose = require('mongoose');
 
+
+// Register
+require('../Schemas/registrationData');
+const Register = mongoose.model("Registration Data");
+
 // Planned Maintenance
 require('../Schemas/PlannedMaintenance');
 const Maintenance = mongoose.model('Maintenance');
 
 // Unplanned Maintenance
-require('../Schemas/UnplannedMaintainence');
-const Unplanned = mongoose.model('Unplanned');
+// require('../Schemas/UnplannedMaintainence');
+// const Unplanned = mongoose.model('Unplanned');
 
 // Create Planned Maintenance
 
@@ -16,7 +21,6 @@ const createPlannedMaintenance = async (Request, Response) => {
         const { registration, mtce, date, cost, km } = Request.body;
         const attachment = Request.file ? Request.file.path : null;
         const userId = Request.user.Id;
-
 
         const newMaintenanceLog = Maintenance({
             userId,
@@ -87,127 +91,30 @@ const DeleteMaintenanceReport = async (Request, Response) => {
 // get Maintenance Reports
 const getAllMaintenanceReports = async (Request, Response) => {
     try {
-        const MaintenanceReports = await Maintenance.find();
-        if (!MaintenanceReports) return Response.status(404).json({ message: "No maintenance reports found" });
-        return Response.status(200).json({ message: MaintenanceReports })
+        const { userId } = Request.query;
+        if (!userId) {
+            return Response.status(400).json({ message: 'User or company not found' });
+        }
+
+        const user = await Register.findById(userId);
+
+        if (!user || !user.companyId) {
+            return Response.status(400).json({ message: "User or company not found" });
+        }
+
+        const maintenanceReports = await Maintenance.find({ companyId: user.companyId });
+        if (!maintenanceReports.length) {
+            return Response.status(400).json({ message: "No reports Found" });
+        }
+        return Response.status(200).json(maintenanceReports);
     } catch (error) {
         return Response.status(500).json({ status: 'Error', data: error.message });
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-// create unplanned Report
-
-const createUnplannedMaintenance = async (Request, Response) => {
-    try {
-        const { vmake, vmodel, vlicenceRegistration, part, serialNumber, Description, Schedule } = Request.body
-        const attachment = Request.file ? Request.file.path : null;
-        const userId = Request.user.Id;
-
-        const existingReport = await Unplanned.findOne({ PartSerialNumber: serialNumber });
-
-        if (existingReport) return Response.status(400).json({
-            message: "Maintenance Report exists"
-        });
-
-        const newUnplannedMaintenanceReport = Unplanned({
-            createdBy: userId,
-            VehicleMake: vmake,
-            VehicleModel: vmodel,
-            VehicleRegistration: vlicenceRegistration,
-            PartName: part,
-            PartSerialNumber: serialNumber,
-            PartProblemDescription: Description,
-            ScheduledDate: Schedule,
-            Image: attachment,
-        });
-
-        await newUnplannedMaintenanceReport.save();
-        return Response.status(200).json({
-            message: "Maintenance Report logged Successfully",
-        });
-
-    } catch (error) {
-        return Response.status(500).json({ status: 'Error', message: error.message });
-    }
-}
-
-
-// get all unplanned Maintenance Reports
-
-const getAllUnplannedMaintenanceReports = async (Request, Response) => {
-    try {
-
-        const companyId = Request.user;
-        const unplannedMaintain = await Unplanned.find({ companyId });
-
-        if (maintain.length === 0) {
-            return Response.status(400).json({
-                message: "No Report found"
-            });
-        }
-        return Response.status(200).json({
-            message: unplannedMaintain
-        })
-    } catch (error) {
-        return Response.status(500).json({ status: 'Error', message: error.message });
-    }
-}
-
-// Delete specific unplanned Maintenance reports
-const DeleteUnplannedMaintenanceReport = async (Request, Response) => {
-    try {
-        const { vRegistration } = Request.body;
-        const Maintain = Unplanned.findOneAndDelete({
-            VehicleRegistration: vRegistration
-        })
-
-        if (!Maintain) return Response.status(400).json({
-            message: "Unplanned Maintenance Report Not Found"
-        })
-
-        return Response.status(200).json({
-            message: "Unplanned Maintenance Report Deleted Successfully"
-        })
-    } catch (error) {
-        return Response.status(500).json({ status: 'Error', message: error.message });
-    }
-}
-
-
-// Update unplanned Maintenance
-
-const updateUnplannedMaintenance = async (Request, Response) => {
-    try {
-        const { vmake, vmodel, vlicenceRegistration, part, serialNumber, Description, Schedule } = Request.body;
-
-        const updatedPlannedMaintenance = await unplanned.findOnAndUpdate(
-            { vlicenceRegistration },
-            { vmake, vmodel, part, serialNumber, Description, Schedule },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedPlannedMaintenance) {
-            return Response.status(404).json({
-                message: "Report Not found"
-            });
-        }
-
-        return Response.status(200).json({
-            message: "Report Updated"
-        })
-    } catch (error) {
-        return Response.status(500).json({ status: 'Error', message: error.message });
-    }
-}
 module.exports = {
     createPlannedMaintenance,
     getAllMaintenanceReports,
     DeleteMaintenanceReport,
     updatePlannedMaintenance,
-    createUnplannedMaintenance,
-    DeleteUnplannedMaintenanceReport,
-    getAllUnplannedMaintenanceReports,
-    updateUnplannedMaintenance,
 }

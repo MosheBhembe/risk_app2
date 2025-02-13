@@ -1,15 +1,24 @@
 const mongoose = require('mongoose');
 
-require('../Schemas/SHEPolicy')
-
+require('../Schemas/SHEPolicy');
 const SHE_Policy = mongoose.model('SHE POLICY');
+
+require('../Schemas/registrationData');
+const Register = mongoose.model("Registration Data");
 
 // create Policy
 const create_SHE_policy = async (Request, Response) => {
     try {
         const { shepolicyDocName, shepolicyDocNumber, shePolicyDocType, shePolicyDocReviewDate } = Request.body;
-        const userId = Request.user.Id;
+        const userId = Request.user.id;
         const PolicyDoc = Request.file ? Request.file.path : null;
+        const user = await Register.findById(userId).select("Email companyId");
+
+        if (!user || user.companyId) {
+            return Response.status(400).json({ status: "error", message: "Company ID not found." });
+        }
+
+        const companyId = user.companyId;
 
         const newPolicy = SHE_Policy({
             createdBy: userId,
@@ -31,17 +40,25 @@ const create_SHE_policy = async (Request, Response) => {
 
 const get_SHE_Policy = async (Request, Response) => {
     try {
-        const userId = Request.user.Id;
-        const shePolicy = await SHE_Policy.find({ createdBy: userId });
+        const { userId } = Request.query;
 
-        if (!shePolicy) return Response.status(400).json({
-            message: "No Policy Found"
-        })
+        if (!userId) {
+            return Response.status(400).json({ message: "User not found" });
+        }
 
-        return Response.status(200).json({
-            status: "success",
-            message: shePolicy
-        });
+        const user = await Register.findById(userId);
+
+        if (!user || user.companyId) {
+            return Response.status(400).json({ message: "User or company not found" });
+        }
+
+        const SHEPolicyDocs = await SHE_Policy.find({ companyId: user.companyId });
+
+        if (!SHEPolicyDocs.length) {
+            return Response.status(400).json({ message: "No document found" });
+        }
+
+        return Response.status(200).json(SHEPolicyDocs);
 
     } catch (error) {
         return Response.status(500).json({ status: 'ERROR', data: error.message });

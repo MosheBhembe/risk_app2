@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const SHEPolicySchema = new mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+    companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
     DocumentNumber: { type: String, required: true },
     DocumentName: { type: String, required: true },
     DocumentType: { type: String, required: true },

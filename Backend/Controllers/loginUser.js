@@ -10,7 +10,7 @@ const login = async (Request, Response) => {
 
     try {
         const { email, password } = Request.body;
-        const existingUser = await Register.findOne({ Email: email });
+        const existingUser = await Register.findOne({ Email: email }).populate('companyId');
 
         if (!existingUser) {
             return Response.status(404).send({
@@ -25,12 +25,15 @@ const login = async (Request, Response) => {
             })
         }
 
-        const token = jwt.sign({ email: existingUser.Email, role: existingUser.Role, company: existingUser.Company }, process.env.JWT_TOKEN);
+        if (!existingUser.companyId || !existingUser.companyId.name) {
+            return Response.status(400).json({ message: "Company data is missing or invalid" });
+        }
+        const token = jwt.sign({ id: existingUser._id, email: existingUser.Email, role: existingUser.Role, company: existingUser.companyId.name }, process.env.JWT_TOKEN);
         return Response.status(200).send({ status: 'ok', data: token });
 
     } catch (error) {
         console.log(error);
-        return Response.status(500).send('Internal Server Error', error);
+        return Response.status(500).send('Internal Server Error', error.message);
     }
 }
 

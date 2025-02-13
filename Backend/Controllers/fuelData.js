@@ -12,7 +12,7 @@ require('../Schemas/emails');
 const Email = mongoose.model('emails');
 
 const fuel_data = async (Request, Response) => {
-    const { regNumber } = Request.body;
+    const { NameSurname, regNumber, assetType } = Request.body;
     const image = Request.file ? Request.file.path : null;
 
     const user_email = await Register.findOne().select('Email');
@@ -24,7 +24,9 @@ const fuel_data = async (Request, Response) => {
 
     const newFuelData = consumptionData({
         createdBy: userId,
+        NameSurname,
         Registration: regNumber,
+        AssetType: assetType,
         Image: image
 
     })

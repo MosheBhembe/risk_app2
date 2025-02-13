@@ -19,10 +19,6 @@ const {
     getAllMaintenanceReports,
     DeleteMaintenanceReport,
     updatePlannedMaintenance,
-    createUnplannedMaintenance,
-    DeleteUnplannedMaintenanceReport,
-    getAllUnplannedMaintenanceReports,
-    updateUnplannedMaintenance
 } = require('../Controllers/Maintenance.js');
 
 // Middleware
@@ -48,7 +44,7 @@ router.post('/forgot-password', forgotPassword);
 router.post('/fuel-data', upload.single('image'), authenticateToken, validateRole(["create_report", "create_fuel_consumption", "get_emails"]), fuel_data);
 router.post('/reset-password', resetPassword);
 router.post('/report-incident', authenticateToken, validateRole(["create_incident_report", "create_fuel_consumption", "get_emails"]), incidentReport);
-router.get('/fetch-incident-report', authenticateToken, validateRole(["get_incident_reports"]), getIncidentReport);
+router.get('/fetch-incident-report', authenticateToken, validateRole(["get_incident_report"]), getIncidentReport);
 router.post('/create-admin-fuel-report', authenticateToken, validateRole(["create_Admin_Fuel_Report"]), upload.single('attachment'), createFuelReport);
 router.put('/update-admin-fuel', authenticateToken, validateRole(["update_Admin_Fuel_Report"]), update_fuel_log);
 router.delete('/delete-admin-fuel', authenticateToken, validateRole(["delete_Admin_Fuel_Report"]), delete_fuel_log);
@@ -61,10 +57,7 @@ router.delete('/delete-planned-maintenance-report', authenticateToken, validateR
 router.put('/update-planned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log "]), updatePlannedMaintenance);
 
 // Unplaned Maintenace Report
-router.post('/create-unplanned-maintenance-report', authenticateToken, validateRole(["create_maintainence_log"]), upload.single('attachment'), createUnplannedMaintenance);
-router.get('/get-all-unplanned-maintenance-report', authenticateToken, validateRole(["get_maintainence_log"]), getAllUnplannedMaintenanceReports);
-router.delete('/delete-unplanned-maitenance-report', authenticateToken, validateRole(["delete_maintainence_log"]), DeleteUnplannedMaintenanceReport);
-router.put('/update-unplanned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log"]), updateUnplannedMaintenance);
+
 router.post('/log-license-training', authenticateToken, validateRole(["create_license-training_form"]), upload.single('document'), create_license_training);
 router.get('get-license-training', authenticateToken, validateRole(["get-license_training_form"]), get_license_training);
 

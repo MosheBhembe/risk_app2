@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 require('../Schemas/Assets');
+require('../Schemas/registrationData');
 
 const Assets = mongoose.model('Assets');
+const Register = mongoose.model("Registration Data");
 
 // Create Assets
 const CreateAsset = async (Request, Response) => {
@@ -10,8 +12,16 @@ const CreateAsset = async (Request, Response) => {
         const document = Request.file ? Request.file.path : null;
         const userId = Request.user.Id;
 
-        const ExistingAsset = await Assets.findOne({ AssetReg: AssetRegistration });
+        if (!userId) {
+            return Response.status(400).json({ message: "User Id is required" });
 
+        }
+
+        const registeredUser = await Register.findById(userId);
+        if (!registeredUser || !registeredUser.companyId) {
+            return Response
+        }
+        const ExistingAsset = await Assets.findOne({ AssetReg: AssetRegistration });
         if (ExistingAsset) return Response.status(400).json({ message: 'Asset already Exists' });
 
         const newAsset = Assets({
@@ -37,10 +47,22 @@ const CreateAsset = async (Request, Response) => {
 
 const GetAllAssets = async (Request, Response) => {
     try {
-        const assets = await Assets.find();
+        const { userId } = Request.query;
+        if (!userId) {
+            return Response.status(400).json({ message: 'User or company not found' });
+        }
 
-        if (!assets) return Response.status(400).json({ message: 'No Assets Found' });
-        return Response.status(200).json({ assets: assets });
+        const user = await Register.findById(userId);
+
+        if (!user || !user.companyId) {
+            return Response.status(400).json({ message: 'User or company not found' });
+        }
+        const assets = await Assets.find({ companyId: user.companyId });
+
+        if (!assets.length) {
+            return Response.status(400).json({ message: 'No assets found' });
+        }
+        return Response.status(200).json(assets);
 
     } catch (error) {
         return Response.status(500).json({ status: 'ERROR', data: error.message });
