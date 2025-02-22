@@ -1,31 +1,35 @@
 const mongoose = require('mongoose');
 require('../Schemas/Assets');
 require('../Schemas/registrationData');
+require('../Schemas/Company');
 
 const Assets = mongoose.model('Assets');
 const Register = mongoose.model("Registration Data");
+// const Company = mongoose.model('Company');
 
 // Create Assets
 const CreateAsset = async (Request, Response) => {
     try {
         const { AssetName, AssetType, AssetRegistration, assetModel, year, capacity } = Request.body
         const document = Request.file ? Request.file.path : null;
-        const userId = Request.user.Id;
-
+        const userId = Request.user.id;
         if (!userId) {
             return Response.status(400).json({ message: "User Id is required" });
-
         }
 
         const registeredUser = await Register.findById(userId);
         if (!registeredUser || !registeredUser.companyId) {
-            return Response
+            return Response.status(404).json({
+                message: 'CompanyId and user not found'
+            });
         }
+        const companyId = registeredUser.companyId;
         const ExistingAsset = await Assets.findOne({ AssetReg: AssetRegistration });
         if (ExistingAsset) return Response.status(400).json({ message: 'Asset already Exists' });
 
         const newAsset = Assets({
             createdBY: userId,
+            companyId,
             AssetName,
             AssetType,
             AssetReg: AssetRegistration,
@@ -47,7 +51,7 @@ const CreateAsset = async (Request, Response) => {
 
 const GetAllAssets = async (Request, Response) => {
     try {
-        const { userId } = Request.query;
+        const userId = Request.user.id;
         if (!userId) {
             return Response.status(400).json({ message: 'User or company not found' });
         }

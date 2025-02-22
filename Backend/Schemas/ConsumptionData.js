@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const ConsumptionDataSchema = mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
     NameSurname: { type: String, required: true },
     Registration: { type: String },
     AssetType: { type: String, required: true },

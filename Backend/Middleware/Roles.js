@@ -8,6 +8,7 @@ const roleAccess = {
         "update_asset",
         "get_all_assets",
         "get_emails",
+        "get_report",
 
         // Maintainence Log
         "create_maintainence_log",
@@ -35,7 +36,8 @@ const roleAccess = {
         "delete_Admin_Fuel_Report",
         "get_Admin_Fuel_Report",
         "create_license-training_form",
-        "get_license_training_form "
+        "get_license_training_form",
+        "create-she-inspection"
 
     ],
     Manager: [
@@ -44,13 +46,15 @@ const roleAccess = {
         "get_emailes",
         "get_SHE_policy",
         "get_SHE_document",
-        "get-license_training_form"
-
+        "get-license_training_form",
+        "create-she-inspection",
+        "get_report"
     ],
     Employee: [
         "create_incident_report",
         "create_fuel_consumption",
-        "get_emails"
+        "get_emails",
+        "get-she-inspection"
     ]
 }
 

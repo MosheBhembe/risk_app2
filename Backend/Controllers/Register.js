@@ -102,8 +102,45 @@ const registerUser = async (req, res) => {
     }
 };
 
-const delete_user = async (Request, Response) => {
+const delete_user = async (req, res) => {
+    try {
+        const { email } = req.body;
 
+        const user = await Register.findOneAndDelete({ Email: email });
+
+        if (!user) {
+            return res.status(404).json({ status: 'Error', message: 'User not found' });
+        }
+
+        res.status(200).json({ status: 'ok', message: 'User deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'Error', message: error.message });
+    }
+};
+
+const getAllUsers = async (Req, Res) => {
+    try {
+        const { company } = Req.user;
+
+        if (!company) {
+            return Res.status(400).json({ message: "Data not found" });
+        }
+
+        const companyDoc = await Company.findOne({ name: company });
+
+        if (!companyDoc) {
+            return Res.status(404).json({ message: 'Company not found' });
+        }
+
+
+        const users = await Register.find({ companyId: companyDoc._id });
+        return Res.status(200).json(users);
+
+    } catch (err) {
+        console.error(err);
+        return Res.status(500).json({ message: "Error fetching data" })
+    }
 }
 
-module.exports = { registerUser, delete_user };
+module.exports = { registerUser, delete_user, getAllUsers };

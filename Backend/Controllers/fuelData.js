@@ -74,4 +74,27 @@ const fuel_data = async (Request, Response) => {
     }
 }
 
-module.exports = fuel_data; 
+
+const getAllfuelData = async (Request, Response) => {
+    try {
+        const userId = Request.user.id;
+        if (!userId) return Response.status(404).json({
+            message: 'User not found'
+        })
+
+        const user = await Register.findById(userId);
+        if (!user || user.companyId) {
+            return Response.status(404).json({ message: "user or company does not exist" });
+        }
+
+        const fuelData = await consumptionData.find({ companyId: user.companyId });
+        if (!fuelData.length) return Response.status(400).json({
+            message: "no fuel data log found"
+        });
+        return Response.status(200).json(fuelData);
+    } catch (error) {
+        console.log(error);
+        return Response.status(500).json({ message: "Server Error" });
+    }
+}
+module.exports = { fuel_data, getAllfuelData }; 
