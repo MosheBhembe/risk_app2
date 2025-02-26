@@ -40,25 +40,28 @@ const create_SHE_policy = async (Request, Response) => {
 
 const get_SHE_Policy = async (Request, Response) => {
     try {
-        const { userId } = Request.query;
+        const userId = Request.user.id;
 
         if (!userId) {
-            return Response.status(400).json({ message: "User not found" });
+            return Response.status(400).json({ status: 'error', message: "User not found" });
         }
 
         const user = await Register.findById(userId);
 
-        if (!user || user.companyId) {
+        if (!user || !user.companyId) {
             return Response.status(400).json({ message: "User or company not found" });
         }
 
         const SHEPolicyDocs = await SHE_Policy.find({ companyId: user.companyId });
 
-        if (!SHEPolicyDocs.length) {
-            return Response.status(400).json({ message: "No document found" });
+        if (!SHEPolicyDocs) {
+            return Response.status(404).json({ message: "No document found" });
         }
 
-        return Response.status(200).json(SHEPolicyDocs);
+        return Response.status(200).json({
+            status: "Success",
+            message: SHEPolicyDocs
+        });
 
     } catch (error) {
         return Response.status(500).json({ status: 'ERROR', data: error.message });

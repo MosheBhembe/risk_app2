@@ -54,7 +54,12 @@ const roleAccess = {
         "create_incident_report",
         "create_fuel_consumption",
         "get_emails",
-        "get-she-inspection"
+        "get-she-inspection",
+        "get_all_assets",
+        "get_incident_reports",
+        "get_SHE_document",
+        "get_SHE_policy",
+        "get_maintainence_log"
     ]
 }
 

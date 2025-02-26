@@ -9,8 +9,9 @@ const registrationDataSchema = mongoose.Schema({
     CellPhone: { type: String, required: true },
     Email: {
         type: String,
-        required: true,
-        unique: true
+        required: false,
+        unique: true, 
+        sparse: true
     },
     Gender: { type: String, required: true },
     Password: String,

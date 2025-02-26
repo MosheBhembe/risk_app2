@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const Company = mongoose.Schema({
+const CompanySchema = mongoose.Schema({
     name: { type: String, required: true, unique: true }
 }, {
     timestamps: true,
     collection: "Company"
 });
 
-mongoose.model("Company", Company); 
+mongoose.model("Company", CompanySchema); 
