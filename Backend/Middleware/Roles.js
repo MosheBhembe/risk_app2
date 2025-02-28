@@ -37,7 +37,8 @@ const roleAccess = {
         "get_Admin_Fuel_Report",
         "create_license-training_form",
         "get_license_training_form",
-        "create-she-inspection"
+        "create-she-inspection",
+        "create_asset_licence"
 
     ],
     Manager: [
@@ -48,7 +49,8 @@ const roleAccess = {
         "get_SHE_document",
         "get-license_training_form",
         "create-she-inspection",
-        "get_report"
+        "get_report",
+        "create_asset_licence"
     ],
     Employee: [
         "create_incident_report",
@@ -59,7 +61,9 @@ const roleAccess = {
         "get_incident_reports",
         "get_SHE_document",
         "get_SHE_policy",
-        "get_maintainence_log"
+        "get_maintainence_log",
+        "get_all_assets",
+        "fetch_asset_licence"
     ]
 }
 

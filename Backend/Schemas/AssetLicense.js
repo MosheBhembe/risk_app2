@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const AssetLicenseSchema = mongoose.Schema({
-    createdBy: { type: mongoose.Schema.Types.objectId, ref: 'user' },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+    companyId: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
     RegistrationNumber: { type: String, required: true },
     LicenseNumber: { type: String, required: true },
     LicenseFrequency: { type: String, required: true },

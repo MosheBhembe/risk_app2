@@ -22,6 +22,9 @@ const {
 } = require('../Controllers/Maintenance.js');
 
 const { createInspection, getInspectionReports } = require('../Controllers/Inspections.js');
+const { create_asset_license, get_Asset_license } = require('../Controllers/AssetLicense.js');
+
+
 // Middleware 
 const authenticateToken = require('./Authenticator.js');
 const validateRole = require('./Roles.js');
@@ -59,12 +62,15 @@ router.get('/get-all-planned-maintenance-reports', authenticateToken, validateRo
 router.delete('/delete-planned-maintenance-report', authenticateToken, validateRole(["delete_maintainence_log"]), DeleteMaintenanceReport);
 router.put('/update-planned-maintenance-report', authenticateToken, validateRole(["update_maintainence_log "]), updatePlannedMaintenance);
 
-// Unplaned Maintenace Report
+//License Training Documents
 router.post('/log-license-training', authenticateToken, validateRole(["create_license-training_form"]), upload.single('document'), create_license_training);
 router.get('get-license-training', authenticateToken, validateRole(["get-license_training_form"]), get_license_training);
 
+// Asset license 
+router.post('/log-asset-license', authenticateToken, validateRole(["create_asset_licence"]), create_asset_license);
+router.get('/fetch-asset-licences', authenticateToken, validateRole(["fetch_asset_licence"]), get_Asset_license)
 // Get endpoints 
-router.get('/emails', authenticateToken, getAllEmails);
+router.get('/emails', upload.single('document'), authenticateToken, getAllEmails);
 router.get('/fetch-all-assets', authenticateToken, validateRole(["get_all_assets"]), GetAllAssets);
 
 module.exports = router; 
