@@ -11,7 +11,7 @@ const create_asset_license = async (Request, Response) => {
     try {
         const userId = Request.user.id;
         const document = Request.file ? Request.file.path : null;
-        const { registrationNum, licenseNumber, licenseFreq, expiryDate, status } = Request.body;
+        const { registration_Number, type, issuedto, issueDate, expiryDate, company } = Request.body;
 
         if (!userId) {
             return Response.status(401).json({ message: "Unauthorized" });
@@ -26,12 +26,13 @@ const create_asset_license = async (Request, Response) => {
         const newAssetLicense = AssetsLicense({
             createdBy: userId,
             companyId: companyId,
-            RegistrationNumber: registrationNum,
-            LicenseNumber: licenseNumber,
-            LicenseFrequency: licenseFreq,
-            ExpireDate: expiryDate,
-            Status: status,
-            Document: document
+            RegistrationNumber: registration_Number,
+            LicenseType: type,
+            IssuedTo: issuedto,
+            IssueDate: issueDate,
+            ExpiryDate: expiryDate,
+            Company: company,
+            LicenseCopyUpload: document
         });
 
         await newAssetLicense.save();

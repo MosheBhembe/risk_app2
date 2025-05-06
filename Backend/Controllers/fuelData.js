@@ -12,31 +12,33 @@ require('../Schemas/emails');
 const Email = mongoose.model('emails');
 
 const fuel_data = async (Request, Response) => {
-    try{
-    const { NameSurname, regNumber, assetType } = Request.body;
-    const image = Request.file ? Request.file.path : null;
+    try {
+        const { dateTime, NameSurname, regNumber, fuelType, litres, cost, odometer } = Request.body;
+        const image = Request.file ? Request.file.path : null;
 
-    const user_email = await Register.findOne().select('Email');
-    const userId = Request.user.Id;
+        const user_email = await Register.findOne().select('Email');
+        const userId = Request.user.Id;
 
-    if (!image) {
-        return Response.status(400).json({ message: 'No Image uploaded' });
-    }
+        if (!image) {
+            return Response.status(400).json({ message: 'No Image uploaded' });
+        }
 
-    const newFuelData = consumptionData({
-        createdBy: userId,
-        NameSurname,
-        Registration: regNumber,
-        AssetType: assetType,
-        Image: image
+        const newFuelData = consumptionData({
+            createdBy: userId,
+            DateTime: dateTime,
+            NameSurname,
+            Registration: regNumber,
+            FuelType: fuelType,
+            Cost: cost,
+            KM: odometer,
+            Image: image
+        })
+        await newFuelData.save();
+        Response.status(200).json({
+            message: 'Data sent'
+        })
 
-    })
-    await newFuelData.save();
-    Response.status(200).json({
-        message: 'Data sent'
-    })
-
-    // Create the email body sructure
+        // Create the email body sructure
 
     } catch (error) {
         console.log('Error saving fuel data:', error);
@@ -53,12 +55,12 @@ const getAllfuelData = async (Request, Response) => {
         })
 
         const user = await Register.findById(userId);
-        if (!user || user.companyId) {
+        if (!user || !user.companyId) {
             return Response.status(404).json({ message: "user or company does not exist" });
         }
 
         const fuelData = await consumptionData.find({ companyId: user.companyId });
-        if (!fuelData.length) return Response.status(400).json({
+        if (!fuelData.length) return Response.status(404).json({
             message: "no fuel data log found"
         });
         return Response.status(200).json(fuelData);

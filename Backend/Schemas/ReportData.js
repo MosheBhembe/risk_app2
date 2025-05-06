@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const reportDataSchema = mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+    IncidentNumber: { type: String, required: true },
     Names: { type: String, required: true },
     DateTime: { type: Date, required: true },
     selectedOptions: { type: [String], required: true },

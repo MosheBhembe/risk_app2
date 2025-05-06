@@ -13,7 +13,7 @@ const Register = mongoose.model('Registration Data');
 
 
 const incidentReport = async (Request, Response) => {
-  const { nameSurname, dateTime, incidentType, place, description, equipment, peopleInvolved } = Request.body;
+  const { incidentNumber, nameSurname, dateTime, incidentType, place, description, equipment, peopleInvolved } = Request.body;
   const userId = Request.user.id;
   const userData = await Register.findById(userId).select('Email companyId');
 
@@ -28,6 +28,7 @@ const incidentReport = async (Request, Response) => {
     const newReport = Report({
       createdBy: userId,
       companyId: companyId,
+      IncidentNumber: incidentNumber,
       Names: nameSurname,
       DateTime: dateTime,
       selectedOptions: incidentType,
@@ -43,6 +44,8 @@ const incidentReport = async (Request, Response) => {
     Response.status(500).json({ status: "error", data: error.message });
   }
 };
+
+// update
 
 
 // get Incident report
