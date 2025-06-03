@@ -44,7 +44,11 @@ const roleAccess = {
         "create_investigation",
         "update_investigation",
         "getInvestigation",
-
+        "create-observation",
+        "create-pre-trip-inspection",
+        "get-all-pre-trip-inspections",
+        "create-post-inspection",
+        "get-post-inspection"
     ],
     Manager: [
         "get_all_assets",
@@ -57,6 +61,11 @@ const roleAccess = {
         "get_report",
         "create_asset_licence",
         "getInvestigation",
+        "create-observation",
+        "create-pre-trip-inspection",
+        "get-all-pre-trip-inspections",
+        "create-post-inspection",
+        "get-post-inspection"
     ],
     Employee: [
         "create_incident_report",
@@ -73,7 +82,13 @@ const roleAccess = {
         "create_maintenance_slip",
         "get_maintenance_slip",
         "get_report",
-        "create-she-awareness"
+        "create-she-awareness",
+        "create-observation",
+        "get-observation-report",
+        "create-pre-trip-inspection",
+        "get-all-pre-trip-inspections",
+        "create-post-inspection",
+        "get-post-inspection"
     ]
 }
 

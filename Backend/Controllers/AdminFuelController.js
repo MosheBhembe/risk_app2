@@ -1,4 +1,3 @@
-const { Admin } = require('mongodb');
 const mongoose = require('mongoose');
 require('../Schemas/AdminFuelReport')
 const AdminFuel = mongoose.model('Admin Fuel');

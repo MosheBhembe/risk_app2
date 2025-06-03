@@ -14,18 +14,18 @@ const { create_SHE_policy, get_SHE_Policy } = require('../Controllers/SHEPolicy.
 const { createsheDocument, getSHEDocument } = require('../Controllers/SHEdoc.js');
 const { createFuelReport, update_fuel_log, getfuelReport, delete_fuel_log } = require('../Controllers/AdminFuelController.js');
 const { create_license_training, get_license_training } = require('../Controllers/TrainingController.js');
-const {
-    createPlannedMaintenance,
-    getAllMaintenanceReports,
-    DeleteMaintenanceReport,
-    updatePlannedMaintenance,
-} = require('../Controllers/Maintenance.js');
+const { createPlannedMaintenance, getAllMaintenanceReports, DeleteMaintenanceReport, updatePlannedMaintenance } = require('../Controllers/Maintenance.js');
 
 const { createInspection, getInspectionReports, updateInspections } = require('../Controllers/Inspections.js');
 const { create_asset_license, get_Asset_license } = require('../Controllers/AssetLicense.js');
 const { maintenance_slips, getAllMaintenanceSlips } = require('../Controllers/MaintainenceSlip');
 const { createInvestigationReport, updateInvestigationReport, getInvestigationReport } = require('../Controllers/IncidentInvestigation.js');
-const { createSHEAwarenessDocument, getSheAwarenessDocument } = require('../Controllers/SHEAwareness.js'); 
+const { createSHEAwarenessDocument, getSheAwarenessDocument } = require('../Controllers/SHEAwareness.js');
+const { createPlannedObservationReport, getPlannedObservation } = require('../Controllers/PlannedTaskObservation.js');
+const { createPreInspection, getPreInspection } = require('../Controllers/PreInspection.js');
+const { createPostInspection, getPostInspection } = require('../Controllers/PostInpection.js');
+
+
 // Middleware 
 const authenticateToken = require('./Authenticator.js');
 const validateRole = require('./Roles.js');
@@ -73,7 +73,7 @@ router.get('get-license-training', authenticateToken, validateRole(["get-license
 
 // SHE Awareness Document
 
-router.post('/create-she-awareness-document', authenticateToken, validateRole(["create-she-awareness"]), upload.single('document'), createSHEAwarenessDocument); 
+router.post('/create-she-awareness-document', authenticateToken, validateRole(["create-she-awareness"]), upload.single('document'), createSHEAwarenessDocument);
 router.get('/get-she-awareness-document', authenticateToken, validateRole(["get-she-awareness-document"]), getSheAwarenessDocument);
 // Asset license 
 router.post('/log-asset-license', authenticateToken, validateRole(["create_asset_licence"]), create_asset_license);
@@ -84,5 +84,15 @@ router.get('/fetch-all-assets', authenticateToken, validateRole(["get_all_assets
 
 router.post('/create-maintenance-slips', upload.single('image'), authenticateToken, validateRole(["create_maintenance_slip"]), maintenance_slips);
 router.get('/get-all-maintenance-slips', authenticateToken, validateRole(["get_maintenance_slip"]), getAllMaintenanceSlips);
+router.post('/create-task-observation', authenticateToken, validateRole(["create-observation"]), createPlannedObservationReport);
+router.get('/get-task-observation', authenticateToken, validateRole(["get-observation-report"]), getPlannedObservation);
+
+router.post('/create-pre-inspections', authenticateToken, validateRole(["create-pre-trip-inspection"]), createPreInspection);
+router.get('/get-pre-inspection', authenticateToken, validateRole(["get-all-pre-trip-inspections"]), getPreInspection);
+router.post('/create-post-inspection', authenticateToken, validateRole(["create-post-inspection"]), createPostInspection);
+router.get('/get-post-Inspection', authenticateToken, validateRole(["get-post-inspection"]), getPostInspection);
+
+
+
 
 module.exports = router; 
